@@ -1,0 +1,204 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct list
+{
+    int data;
+    struct list *next;
+};
+
+typedef struct list node;
+
+
+void display(node *start);
+void display1(node *start);
+void display2(node *start);
+int checker(node *start, int item);
+void musicstop(node *start,int n);
+
+int main()
+{
+    node *start, *temp, *prev;
+    int n,i;
+    printf("Enter player number:");
+    scanf("%d",&n);
+    if(n==0)
+    {
+        start = NULL;
+        display(start);
+    }
+    else
+    {
+        start = NULL;
+        for(i=1;i<=n;i++)
+        {
+            if(start == NULL)
+            {
+                start=(node*)malloc(sizeof(node));
+                start->next = NULL;
+                start->data=i;
+                prev = start;
+            }
+            else
+            {
+                temp=(node*)malloc(sizeof(node));
+                temp->next = NULL;
+                temp->data=i;
+                prev->next = temp;
+                prev = temp;
+            }
+
+        }
+        musicstop(start,n);
+    }
+
+
+
+
+    return 0;
+}
+
+void display(node *start)
+{
+    if(start == NULL)
+        printf("\n\nThere are no players to play !!!\n");
+    else
+        printf("\n\nThe winner  Player is %d  !!!\n",start->data);
+}
+
+void display1(node *start)
+{
+    node *temp;
+    temp = start;
+    printf("Remaining Playere In the Game: ");
+    while (temp != NULL)
+    {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+
+}
+void display2(node *start)
+{
+    node *temp;
+    temp = start;
+    printf("There Players out of the game: ");
+    while (temp != NULL)
+    {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+
+}
+
+int checker(node *start, int item)
+{
+    node *temp;
+    temp = start;
+    while(temp!=NULL)
+    {
+        if(item == temp->data)
+            return 0;
+        temp= temp->next;
+    }
+    return 1;
+}
+
+void musicstop(node *start,int n)
+{
+    node *temp, *prev, *head, *temp1, *prev1;
+    int flag=0, i;
+    int item,x;
+    head = NULL;
+    while(start->next!=NULL)
+    {
+        flag=0;
+        item = (rand()%n)+1;
+        int Arr[n];
+        for(i=0;i<n;i++){
+                if(item!=Arr[i]){
+                    Arr[i]=item;
+                    flag=1;
+                    break;
+                }else{
+                    musicstop(start,n-i);
+                }
+        }
+        if(flag==1){
+
+        x=checker(head,item);
+
+        printf("\n %dRunner Up This Player Out of the game: %d \n\n" ,n,item);
+
+
+        if(x==1)
+        {
+            temp=start;
+            prev=start;
+            if(start->data == item)
+            {
+                temp=start;
+                start=start->next;
+
+                if(head == NULL)
+                {
+                    head=(node*)malloc(sizeof(node));
+                    head->next = NULL;
+                    head->data = temp->data;
+                    prev1 = head;
+                }
+                else
+                {
+                    temp1=(node*)malloc(sizeof(node));
+                    temp1->next = NULL;
+                    temp1->data = temp->data;
+                    prev1->next = temp1;
+                    prev1 = temp1;
+                }
+
+
+                free(temp);
+            }
+            else
+            {
+                while(temp != NULL && temp->data!=item)
+                {
+                    prev=temp;
+                    temp=temp->next;
+
+                }
+                if(temp!=NULL)
+                {
+                    prev->next=temp->next;
+                    if(head == NULL)
+                    {
+                        head=(node*)malloc(sizeof(node));
+                        head->next = NULL;
+                        head->data = temp->data;
+                        prev1 = head;
+                    }
+                    else
+                    {
+                        temp1=(node*)malloc(sizeof(node));
+                        temp1->next = NULL;
+                        temp1->data = temp->data;
+                        prev1->next = temp1;
+                        prev1 = temp1;
+                    }
+                    free(temp);
+                }
+            }
+        }
+        display1(start);
+        printf("\n");
+        display2(head);
+        printf("\n");
+        }
+
+    }
+
+
+    display(start);
+    printf("\n");
+}
